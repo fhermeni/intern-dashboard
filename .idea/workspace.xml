@@ -67,7 +67,7 @@
       <file leaf-file-name="layout.jade" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/layout.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="20" selection-start="33" selection-end="38" vertical-scroll-proportion="0.0" vertical-offset="45" max-vertical-offset="240">
+            <state line="0" column="12" selection-start="12" selection-end="12" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
               <folding />
             </state>
           </provider>
@@ -76,28 +76,16 @@
       <file leaf-file-name="index.jade" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/index.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="29" selection-start="263" selection-end="263" vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="690">
-              <folding>
-                <marker date="1393109886000" expanded="true" signature="36:263" placeholder="..." />
-                <marker date="1393109886000" expanded="true" signature="89:263" placeholder="..." />
-                <marker date="1393109886000" expanded="true" signature="161:263" placeholder="..." />
-                <marker date="1393109886000" expanded="true" signature="205:263" placeholder="..." />
-                <marker date="1393109886000" expanded="true" signature="378:975" placeholder="..." />
-                <marker date="1393109886000" expanded="true" signature="407:975" placeholder="..." />
-                <marker date="1393109886000" expanded="true" signature="440:608" placeholder="..." />
-                <marker date="1393109886000" expanded="true" signature="628:767" placeholder="..." />
-                <marker date="1393109886000" expanded="true" signature="787:913" placeholder="..." />
-                <marker date="1393109886000" expanded="true" signature="1073:1185" placeholder="..." />
-                <marker date="1393109886000" expanded="true" signature="1092:1185" placeholder="..." />
-              </folding>
+            <state line="0" column="18" selection-start="14" selection-end="14" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="690">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="server.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="81" column="66" selection-start="2579" selection-end="2579" vertical-scroll-proportion="0.0" vertical-offset="951" max-vertical-offset="1665">
+            <state line="8" column="43" selection-start="247" selection-end="247" vertical-scroll-proportion="-2.9454095" vertical-offset="1307" max-vertical-offset="1725">
               <folding />
             </state>
           </provider>
@@ -106,16 +94,16 @@
       <file leaf-file-name="package.json" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="48" selection-start="80" selection-end="80" vertical-scroll-proportion="-1.25" vertical-offset="0" max-vertical-offset="375">
+            <state line="7" column="19" selection-start="209" selection-end="209" vertical-scroll-proportion="-4.375" vertical-offset="0" max-vertical-offset="390">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Procfile" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Procfile" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Procfile">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="16" selection-start="16" selection-end="16" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="429">
+            <state line="0" column="16" selection-start="16" selection-end="16" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="105">
               <folding />
             </state>
           </provider>
@@ -131,11 +119,11 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/views/layout.jade" />
         <option value="$PROJECT_DIR$/views/index.jade" />
-        <option value="$PROJECT_DIR$/server.js" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/Procfile" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/views/layout.jade" />
+        <option value="$PROJECT_DIR$/server.js" />
       </list>
     </option>
   </component>
@@ -222,15 +210,15 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="preferences.pluginManager" />
+    <property name="options.lastSelected" value="settings.nodejs" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/server.js" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Global Libraries" />
     <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="FullScreen" value="false" />
   </component>
   <component name="RunManager" selected="Node.js.dashboard">
@@ -410,12 +398,12 @@
       <workItem from="1393105212105" duration="1032000" />
       <workItem from="1393106254271" duration="4126000" />
       <workItem from="1393149852033" duration="19000" />
-      <workItem from="1393149880065" duration="271000" />
+      <workItem from="1393149880065" duration="1590000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5448000" />
+    <option name="totallyTimeSpent" value="6767000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1280" height="774" extended-state="6" />
@@ -471,19 +459,7 @@
     <entry file="file://$PROJECT_DIR$/views/index.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state line="7" column="29" selection-start="263" selection-end="263" vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="690">
-          <folding>
-            <marker date="1393109886000" expanded="true" signature="36:263" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="89:263" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="161:263" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="205:263" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="378:975" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="407:975" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="440:608" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="628:767" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="787:913" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="1073:1185" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="1092:1185" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -504,19 +480,7 @@
     <entry file="file://$PROJECT_DIR$/views/index.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state line="7" column="29" selection-start="263" selection-end="263" vertical-scroll-proportion="0.0" vertical-offset="105" max-vertical-offset="690">
-          <folding>
-            <marker date="1393109886000" expanded="true" signature="36:263" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="89:263" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="161:263" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="205:263" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="378:975" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="407:975" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="440:608" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="628:767" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="787:913" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="1073:1185" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="1092:1185" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -534,49 +498,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/layout.jade">
+    <entry file="file://$PROJECT_DIR$/Procfile">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="20" selection-start="33" selection-end="38" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="29" selection-start="263" selection-end="263" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="690">
-          <folding>
-            <marker date="1393109886000" expanded="true" signature="36:263" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="89:263" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="161:263" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="205:263" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="378:975" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="407:975" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="440:608" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="628:767" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="787:913" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="1073:1185" placeholder="..." />
-            <marker date="1393109886000" expanded="true" signature="1092:1185" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="66" selection-start="2579" selection-end="2579" vertical-scroll-proportion="0.0" vertical-offset="951" max-vertical-offset="1665">
+        <state line="0" column="16" selection-start="16" selection-end="16" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="429">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="48" selection-start="80" selection-end="80" vertical-scroll-proportion="-1.25" vertical-offset="0" max-vertical-offset="375">
+        <state line="7" column="19" selection-start="209" selection-end="209" vertical-scroll-proportion="-4.375" vertical-offset="0" max-vertical-offset="390">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Procfile">
+    <entry file="file://$PROJECT_DIR$/views/layout.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="16" selection-start="16" selection-end="16" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="429">
+        <state line="0" column="12" selection-start="12" selection-end="12" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/index.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="18" selection-start="14" selection-end="14" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="690">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="43" selection-start="247" selection-end="247" vertical-scroll-proportion="-2.9454095" vertical-offset="1307" max-vertical-offset="1725">
           <folding />
         </state>
       </provider>

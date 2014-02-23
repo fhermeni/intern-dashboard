@@ -1,23 +1,29 @@
 //setup Dependencies
-var connect = require('connect')
-    , express = require('express')
-    , io = require('socket.io')
-    , port = (process.env.PORT || 8081);
-
+express = require('express')
 //Setup Express
-var server = express.createServer();
-server.configure(function(){
-    server.set('views', __dirname + '/views');
-    server.set('view options', { layout: false });
-    server.use(connect.bodyParser());
-    server.use(express.cookieParser());
-    server.use(express.session({ secret: "shhhhhhhhh!"}));
-    server.use(connect.static(__dirname + '/static'));
-    server.use(server.router);
+var app = express(),
+    http = require('http'),
+    server = http.createServer(app),
+    io = require('socket.io').listen(server),
+    port = Number(process.env.PORT || 8081)
+    ;
+
+server.listen(8081)
+
+app.configure(function(){
+    app.set('views', __dirname + '/views');
+    app.set('view options', { layout: false });
+    app.use(express.bodyParser());
+    app.use(express.cookieParser());
+    app.use(express.session({ secret: "shhhhhhhhh!"}));
+    app.use(express.static(__dirname + '/static'));
+    app.use(app.router);
+    app.use(express.errorHandler());
+    app.locals.pretty = true;
 });
 
 //setup the errors
-server.error(function(err, req, res, next){
+app.use(function(err, req, res, next){
     if (err instanceof NotFound) {
         res.render('404.jade', { locals: { 
                   title : '404 - Not Found'
@@ -35,10 +41,8 @@ server.error(function(err, req, res, next){
                 },status: 500 });
     }
 });
-server.listen( port);
 
 //Setup Socket.IO
-var io = io.listen(server);
 io.sockets.on('connection', function(socket){
   console.log('Client Connected');
   socket.on('message', function(data){
@@ -63,14 +67,14 @@ applications = [
     {"date" : "02/02/2014", "name":"Google", "description":"chez Google"},
     {"date" : "03/02/2014", "name":"Facebook", "description":"chez Facebook"}
 ]
-server.get('/', function(req,res){
+    app.get('/', function(req,res){
   res.render('index.jade', {
     "title" : "Gestion des candidatures",
     "applications" : applications
   });
 });
 
-server.post('/rest/application', newApplication);
+app.post('/rest/application', newApplication);
 
 function newApplication(req, res) {
     name = req.params.company
@@ -86,12 +90,12 @@ function newApplication(req, res) {
 }
 
 //A Route for Creating a 500 Error (Useful to keep around)
-server.get('/500', function(req, res){
+app.get('/500', function(req, res){
     throw new Error('This is a 500 Error');
 });
 
 //The 404 Route (ALWAYS Keep this as the last route)
-server.get('/*', function(req, res){
+app.get('/*', function(req, res){
     throw new NotFound;
 });
 
