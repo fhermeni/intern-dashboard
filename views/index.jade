@@ -1,6 +1,40 @@
 extends layout
-
 block content
-	div
-		a(id='sender')='Send a Message'
-		ul(id='receiver')
+    nav.navbar.navbar-default(role="navigation")
+        div.container-fluid
+            div.navbar-header Dashboard
+            div.navbar-collapse.collapse
+                ul.nav.navbar-nav.navbar-right
+                    li Logout
+
+    div.container
+        h1.page-header Informations
+
+        h1.page-header Déposer une candidature
+        div#newPosition
+            form(role="form")
+                div.form-group
+                    label(for="companyInput") Entreprise
+                    input(type="text", placeholder="Nom de l'entreprise").form-control#companyInput
+                div.form-group
+                    label(for="descInput") Description de l'offre
+                    textarea.form-control(rows="5")#descInput
+                div.form-group
+                    label(for="dateInput") Date de la candidature
+                    input(type="date")#dateInput
+                button(type="submit").btn.btn-default Déposer
+
+        h1.page-header Candidatures en cours
+        table.table.table-striped
+            thead
+                tr
+                    th Date
+                    th Entreprise
+                    th Actions
+            tbody
+                each application in applications
+                    tr
+                        td #{application.date}
+                        td #{application.name}
+                        td description, refus, entretien, acceptation
+

@@ -57,17 +57,33 @@ io.sockets.on('connection', function(socket){
 
 /////// ADD ALL YOUR ROUTES HERE  /////////
 
+applications = [
+    {"date" : "01/02/2014", "name":"ATOS", "description":"chez ATOS"},
+    {"date" : "01/02/2014", "name":"IBM", "description":"chez IBM"},
+    {"date" : "02/02/2014", "name":"Google", "description":"chez Google"},
+    {"date" : "03/02/2014", "name":"Facebook", "description":"chez Facebook"}
+]
 server.get('/', function(req,res){
   res.render('index.jade', {
-    locals : { 
-              title : 'Your Page Title'
-             ,description: 'Your Page Description'
-             ,author: 'Your Name'
-             ,analyticssiteid: 'XXXXXXX' 
-            }
+    "title" : "Gestion des candidatures",
+    "applications" : applications
   });
 });
 
+server.post('/rest/application', newApplication);
+
+function newApplication(req, res) {
+    name = req.params.company
+    desc = req.params.desc
+    date = req.params.date
+    if (name.length > 0 || desc.length == 0 || date.length == 0) {
+        res.send_error("Missing parameters");
+    } else {
+        app = {"date" : date, "name" : name, "description" : desc}
+        applications.push(app);
+        res.send(app)
+    }
+}
 
 //A Route for Creating a 500 Error (Useful to keep around)
 server.get('/500', function(req, res){
