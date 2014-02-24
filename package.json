@@ -16,5 +16,5 @@
 	"mocha": "*",
 	"should": "*"
   },
-  "engine": "node >= 0.6.6"
+  "engine": "0.10.26"
 }
