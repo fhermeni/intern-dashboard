@@ -6,9 +6,19 @@ var app = express(),
     server = http.createServer(app),
     io = require('socket.io').listen(server),
     port = Number(process.env.PORT || 8081)
-    ;
 
 server.listen(8081)
+
+//Global variables
+applications = {
+    "0" : {id:0, date : "01/02/2014", company:"ATOS", description:"chez ATOS", nbInterviews : 0, status:"open"},
+    "1" : {id:1, date : "01/02/2014", company:"IBM", description:"chez IBM", nbInterviews : 1, status:"open"},
+    "2" : {id:2, date : "02/02/2014", company:"Google", description:"chez Google", nbInterviews : 0, status:"open"},
+    "3" : {id:3, date : "03/02/2014", company:"Facebook", description:"chez Facebook", nbInterviews : 0, status:"open"}
+}
+nbApplications = 4;
+
+user = {"name" : "Fabien Hermenier", "email" : "fabien.hermenier@unice.fr", major : "AL"};
 
 app.configure(function(){
     app.set('views', __dirname + '/views');
@@ -29,7 +39,7 @@ app.use(function(err, req, res, next){
                   title : '404 - Not Found'
                  ,description: ''
                  ,author: ''
-                 ,analyticssiteid: 'XXXXXXX' 
+                 ,analyticssiteid: 'XXXXXXX'
                 },status: 404 });
     } else {
         res.render('500.jade', { locals: { 
@@ -43,7 +53,7 @@ app.use(function(err, req, res, next){
 });
 
 //Setup Socket.IO
-io.sockets.on('connection', function(socket){
+/*io.sockets.on('connection', function(socket){
   console.log('Client Connected');
   socket.on('message', function(data){
     socket.broadcast.emit('server_message',data);
@@ -52,7 +62,7 @@ io.sockets.on('connection', function(socket){
   socket.on('disconnect', function(){
     console.log('Client Disconnected.');
   });
-});
+});       */
 
 
 ///////////////////////////////////////////
@@ -61,40 +71,85 @@ io.sockets.on('connection', function(socket){
 
 /////// ADD ALL YOUR ROUTES HERE  /////////
 
-applications = [
-    {"date" : "01/02/2014", "name":"ATOS", "description":"chez ATOS"},
-    {"date" : "01/02/2014", "name":"IBM", "description":"chez IBM"},
-    {"date" : "02/02/2014", "name":"Google", "description":"chez Google"},
-    {"date" : "03/02/2014", "name":"Facebook", "description":"chez Facebook"}
-]
-    app.get('/', function(req,res){
-  res.render('index.jade', {
+app.get('/', function(req,res){
+  res.render('student_dashboard.jade', {
     "title" : "Gestion des candidatures",
-    "applications" : applications
+    "applications" : applications,
+    "user" : user
   });
 });
 
-app.post('/rest/application', newApplication);
+app.post('/rest/applications', newApplication);
+app.put('/rest/applications/:applicationId/interviews', addInterview);
+app.put('/rest/applications/:applicationId/status', setStatus);
+app.get('/rest/applications', getApplications)
+app.get('/rest/applications/:id', getApplication)
+
+
+function getApplications(req, res) {
+    res.set("Content-type", "text/json");
+    res.send(200, applications)
+}
+
+function getApplication(req, res) {
+    appId = req.params.applicationId
+    if (applications.hasOwnProperty(appId)) {
+        res.set("Content-type", "text/json")
+        res.send(applications[appId])
+    } else {
+        res.send(404, "Unknown application '" + appId + "'")
+    }
+
+}
 
 function newApplication(req, res) {
-    name = req.params.company
-    desc = req.params.desc
-    date = req.params.date
-    if (name.length > 0 || desc.length == 0 || date.length == 0) {
-        res.send_error("Missing parameters");
+    company = req.body.hasOwnProperty("company") ? req.body.company : "";
+    description = req.body.hasOwnProperty("description") ? req.body.description : "";
+    date = req.body.hasOwnProperty("date") ? req.body.date : "";
+    if (company.length == 0 || description.length == 0 || date.length == 0) {
+        return res.send(400, "Missing parameters");
     } else {
-        app = {"date" : date, "name" : name, "description" : desc}
-        applications.push(app);
-        res.send(app)
+        var id = nbApplications++;
+        console.log("id=" + id)
+        app = {"id" : id, date : date, company : company, description : description, nbInterviews: 0, status : "open"}
+        console.log(JSON.stringify(app))
+        applications[id] = app
+        res.location("rest/applications/" + id)
+        res.send(201, app)
     }
 }
 
-//A Route for Creating a 500 Error (Useful to keep around)
+function addInterview(req, res) {
+    appId = req.params.applicationId
+    if (applications.hasOwnProperty(appId)) {
+        applications[appId].nbInterviews++;
+        console.log("Update nb of interviews for " + appId + " to " + applications[appId].nbInterviews)
+        res.send(""+applications[appId].nbInterviews)
+    } else {
+        res.send(404, "Unknown application '" + appId + "'")
+    }
+}
+
+function setStatus(req, res) {
+    appId = req.params.applicationId;
+    status = req.body.hasOwnProperty("status") ? req.body.status : "";
+    console.log("Update status of " + appId + " to " + status)
+    if (applications.hasOwnProperty(appId)) {
+        if (status == "denied" || status == "granted" || status == "open") {
+            applications[appId].status = status;
+            res.send(200, status)
+        } else {
+            res.send(400, "Unsupported status '" + status + "'")
+        }
+    } else {
+        res.send(404, "Unknown application '" + appId + "'")
+    }
+}
+
 app.get('/500', function(req, res){
     throw new Error('This is a 500 Error');
 });
 
-//The 404 Route (ALWAYS Keep this as the last route)
 app.get('/*', function(req, res){
     throw new NotFound;
 });

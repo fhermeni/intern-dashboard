@@ -20,7 +20,7 @@ copy .\templates\views\500.jade .\views\500.jade
 copy .\templates\views\404.jade .\views\404.jade
 copy .\templates\views\index.jade .\views\index.jade
 copy .\templates\views\layout.jade .\views\layout.jade
-copy .\templates\js\script.js .\static\js\script.js
+copy .\templates\js\client.js .\static\js\client.js
 REM TODO copy over the models
 
 echo "Setting up dependencies from NPM..."

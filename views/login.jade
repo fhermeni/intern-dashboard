@@ -1,0 +1,16 @@
+extends layout
+block content
+    div.row
+        div.span4.offset-4
+            div.well
+                h4 Authentification
+                    div#err
+                    input#login.span3(placeholder="login",type="text",name="login")
+                    input#password.span3(placeholder="mot de passe",type="password",name="password")
+                    button.btn.btn-info(onclick="login()") Connexion
+
+
+
+
+
+
