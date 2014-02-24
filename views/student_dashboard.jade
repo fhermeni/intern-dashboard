@@ -3,12 +3,12 @@ block content
     nav.navbar.navbar-default(role="navigation")
         div.container-fluid
             div.navbar-header
-                a.navbar-brand(href="#") Dashboard
+                a.navbar-brand(href="#") #{name}
             div.navbar-collapse.collapse
                 ul.nav.navbar-nav.navbar-right
                     li
                         a(href="#",onclick="logout()")
-                            #{user.name}
+                            #{name}
                             i.glyphicon.glyphicon-off
 
     div.container
