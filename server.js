@@ -5,9 +5,9 @@ var app = express(),
     http = require('http'),
     server = http.createServer(app),
     io = require('socket.io').listen(server),
-    port = Number(process.env.PORT || 8081)
+    port = Number(process.env.PORT || 5000)
 
-server.listen(8081)
+server.listen(port)
 
 //Global variables
 applications = {

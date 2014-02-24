@@ -2,6 +2,10 @@
   "name": "intern-dashboard",
   "description": "Manage internship applications",
   "author": "fabien.hermenier@unice.fr",
+  "repository": {
+    "type" : "git",
+    "url": "https://github.com/fhermeni/intern-dashboard.git"
+    },
   "version": "0.0.1",
   "dependencies": {
     "connect": "1.8.5",
@@ -13,8 +17,8 @@
   },
   "devDependencies": {
     "vows": "0.5.x",
-	"mocha": "*",
-	"should": "*"
+	  "mocha": "*",
+	  "should": "*"
   },
-  "engine": "0.10.26"
+  "engine": "0.10.x"
 }
