@@ -4,21 +4,13 @@ express = require('express')
 var app = express(),
     http = require('http'),
     server = http.createServer(app),
-    io = require('socket.io').listen(server),
-    port = Number(process.env.PORT || 5000)
+    port = Number(process.env.PORT || 5000),
+    backend = require('./applications.js'),
+    templatizer = require('templatizer')
 
+console.log("Compiling client templates")
+templatizer(__dirname + '/views', __dirname + '/static/js/templates.js');
 server.listen(port)
-
-//Global variables
-applications = {
-    "0" : {id:0, date : "01/02/2014", company:"ATOS", description:"chez ATOS", nbInterviews : 0, status:"open"},
-    "1" : {id:1, date : "01/02/2014", company:"IBM", description:"chez IBM", nbInterviews : 1, status:"open"},
-    "2" : {id:2, date : "02/02/2014", company:"Google", description:"chez Google", nbInterviews : 0, status:"open"},
-    "3" : {id:3, date : "03/02/2014", company:"Facebook", description:"chez Facebook", nbInterviews : 0, status:"open"}
-}
-nbApplications = 4;
-
-user = {"name" : "Fabien Hermenier", "email" : "fabien.hermenier@unice.fr", major : "AL"};
 
 app.configure(function(){
     app.set('views', __dirname + '/views');
@@ -58,79 +50,113 @@ app.use(function(err, req, res, next){
 
 /////// ADD ALL YOUR ROUTES HERE  /////////
 
-app.get('/', function(req,res){
-  res.render('student_dashboard.jade', {
-    "title" : "Gestion des candidatures",
-    "applications" : applications,
-    "user" : user
-  });
-});
+app.get('/', getDashboard)
+app.post('/users/:user/', newApplication);
+app.put('/users/:user/:appId/interviews', addInterview);
+app.put('/users/:user/:appId/status', setStatus);
+app.get('/users/:user/', getApplications)
+app.get('/users/:user/:appId', getApplication)
+app.post('/login', login)
+app.post('/logout', logout)
 
-app.post('/rest/applications', newApplication);
-app.put('/rest/applications/:applicationId/interviews', addInterview);
-app.put('/rest/applications/:applicationId/status', setStatus);
-app.get('/rest/applications', getApplications)
-app.get('/rest/applications/:id', getApplication)
+function getDashboard(req, res) {
+    if (!req.session["user"]) {
+        console.log("not-logged user")
+        res.redirect("/login.html");
+    } else {
+        console.log(req.session.user["login"] + " already logged in")
+        if (req.session.isAdmin) {
+            console.log("Redirection to the administrator dashboard")
+            res.redirect("/admin-dashboard.html");
+        } else {
+            console.log("Redirection to the student dashboard")
+            res.redirect("/student-dashboard.html");
+        }
+    }
+}
+function login(req, res) {
+    backend.isRegistered(req.body.login, req.body.password, function(err, user) {
+        if (err) {
+            res.send(403, err.message)
+            console.log("Access denied for " + req.body.login + ": " + err.message)
+        } else {
+            req.session["user"] = user
+            console.log(user.login + " logged in ")
+            res.send({id : user.id, email : user.login, major: user.major})
+        }
+    })
+}
 
-
+function logout(req, res) {
+    if (req.session["user"]) {
+        //will be req.session.destroy()
+        req.session = null
+    }
+    res.redirect("/")
+}
 function getApplications(req, res) {
-    res.set("Content-type", "text/json");
-    res.send(200, applications)
+    backend.getApplications(req.params.user, function(err, apps) {
+        if (err) {
+            res.send(400, err.message)
+        } else {
+            res.set("Content-type", "text/json")
+            res.send(200, apps)
+        }
+    })
 }
 
 function getApplication(req, res) {
-    appId = req.params.applicationId
-    if (applications.hasOwnProperty(appId)) {
-        res.set("Content-type", "text/json")
-        res.send(applications[appId])
-    } else {
-        res.send(404, "Unknown application '" + appId + "'")
+    var user = req.body.user || ""
+    var appId = req.body.appId || ""
+    var p = backend.getApplication(user, appId)
+    if (appId == undefined) {
+        res.send(404, "Unknown application or user")
+        return
     }
-
+    res.set("Content-type", "text/json");
+    res.send(p);
 }
 
 function newApplication(req, res) {
-    company = req.body.hasOwnProperty("company") ? req.body.company : "";
-    description = req.body.hasOwnProperty("description") ? req.body.description : "";
-    date = req.body.hasOwnProperty("date") ? req.body.date : "";
-    if (company.length == 0 || description.length == 0 || date.length == 0) {
-        return res.send(400, "Missing parameters");
-    } else {
-        var id = nbApplications++;
-        console.log("id=" + id)
-        app = {"id" : id, date : date, company : company, description : description, nbInterviews: 0, status : "open"}
-        console.log(JSON.stringify(app))
-        applications[id] = app
-        res.location("rest/applications/" + id)
-        res.send(201, app)
-    }
+    backend.newApplication(req.params.user, req.body.date, req.body.company, req.body.note,
+    function (err, app) {
+        if (err) {
+            res.send(400, err)
+        } else {
+            res.location("rest/users/" + req.params.user + "/" + app.id)
+            res.set("Content-type", "text/json")
+            res.send(201, app)
+        }
+    });
 }
 
 function addInterview(req, res) {
-    appId = req.params.applicationId
-    if (applications.hasOwnProperty(appId)) {
-        applications[appId].nbInterviews++;
-        console.log("Update nb of interviews for " + appId + " to " + applications[appId].nbInterviews)
-        res.send(""+applications[appId].nbInterviews)
-    } else {
-        res.send(404, "Unknown application '" + appId + "'")
-    }
+    backend.incInterview(req.params.user, req.params.appId, function (err, nb) {
+        if (err) {
+            res.send(400, err.message)
+        } else {
+            res.send(200, ""+nb)
+        }
+    })
 }
 
 function setStatus(req, res) {
-    appId = req.params.applicationId;
-    status = req.body.hasOwnProperty("status") ? req.body.status : "";
-    console.log("Update status of " + appId + " to " + status)
-    if (applications.hasOwnProperty(appId)) {
-        if (status == "denied" || status == "granted" || status == "open") {
-            applications[appId].status = status;
-            res.send(200, status)
+    backend.setStatus(req.params.user, req.params.appId, req.body.status, function (err, nb) {
+        if (err) {
+            res.send(400, err.message)
         } else {
-            res.send(400, "Unsupported status '" + status + "'")
+            res.send(204)
         }
-    } else {
-        res.send(404, "Unknown application '" + appId + "'")
-    }
+    })
+}
+function setNote(req, res) {
+    backend.setNote(req.params.user, req.params.appId, req.body.note, function (err) {
+        if (err) {
+            res.send(400, err.message)
+        } else {
+            res.send(204)
+        }
+    })
 }
 
 app.get('/500', function(req, res){
@@ -138,7 +164,7 @@ app.get('/500', function(req, res){
 });
 
 app.get('/*', function(req, res){
-    throw new NotFound;
+    throw new NotFound(req);
 });
 
 function NotFound(msg){

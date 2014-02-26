@@ -1,15 +1,15 @@
-tr(id="app-"+application.id,class="app-" + application.status)
-    td #{application.date}
-    td #{application.company}
+tr(id="app-"+id,class="app-" + status)
+    td #{date}
+    td #{company}
     td
-        a(onclick="comment(#{application.id})",title="Description de l'offre").action_button
+        a(onclick="comment(#{id})",title="Description de l'offre").action_button
             i.glyphicon.glyphicon-comment
-        a(onclick="addInterview(#{application.id})",title="Déclarer un entretien").action_button
-            span(id="interviews-"+application.id) #{application.nbInterviews}
+        a(onclick="addInterview(#{id})",title="Déclarer un entretien").action_button
+            span(id="interviews-"+id) #{nbInterviews}
             i.glyphicon.glyphicon-briefcase
-        a(onclick="setStatus(#{application.id},'open')",title="Candidature en suspend").action_button
+        a(onclick="setStatus(#{id},'open')",title="Candidature en suspend").action_button
             i.glyphicon.glyphicon-question-sign.action_button
-        a(onclick="setStatus(#{application.id},'denied')",title="Candidature refusée").action_button
+        a(onclick="setStatus(#{id},'denied')",title="Candidature refusée").action_button
             i.glyphicon.glyphicon-remove-sign.action_button
-        a(onclick="setStatus(#{application.id},'granted')",title="Candidature acceptée").action_button
+        a(onclick="setStatus(#{id},'granted')",title="Candidature acceptée").action_button
             i.glyphicon.glyphicon-ok-sign

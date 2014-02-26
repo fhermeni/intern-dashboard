@@ -2,39 +2,25 @@
 * Author: Fabien Hermenier
 */
 
-function newApplication() {
-    console.log("send new application")
-    application = {
-        company : $("#companyInput").val(),
-        description : $("#descInput").val(),
-        date : $("#dateInput").val()
-    }
-    $.post("rest/applications", application, function(data) {
-        id = document.getElementById("applications");
-        tr = id.insertRow("-1");
-        tr.setAttribute("id", "app-" + data.id)
-        var x = {};
-        x.application = data
-        jade.render(tr, "application_line", x)
-    }).fail(function(data) {console.log(data)});
+function login() {
+
+    $.post("/login", {login: $("#login").val(), password : $("#password").val()}
+    , function(data, status) {
+            sessionStorage.setItem("userId", data.id)
+            sessionStorage.setItem("email", data.email)
+            sessionStorage.setItem("major", data.major)
+            window.location.href = "/"
+        }
+    ).fail(function (data) {
+            $("#err").html("<div class='alert alert-danger'>" + data.responseText + "</div>")}
+    )
 }
 
-function addInterview(id) {
-    $.ajax({
-        type:'PUT',
-        url:'rest/applications/' + id + "/interviews"
-    }).done(function(data, textStatus, jqXHR) {console.log(textStatus); console.log("data=" + data);$("#interviews-" + id).html(data)})
-      .fail(function(xhr, status, jqXhr) {console.log("denied " + status)});
-}
-
-function setStatus(id, status) {
-    $.ajax({
-        type:'PUT',
-        url:'rest/applications/' + id + "/status",
-        data : {status : status}
-    }).done(function(data, textStatus, jqXHR) {
-        $("#app-" + id).removeClass("app-denied app-granted app-open")
-        $("#app-" + id).addClass("app-"+status)
-    })
-     .fail(function(xhr, status, jqXhr) {console.log(status)});
+function logout() {
+    $.post("/logout", function (data, status) {
+        sessionStorage.clear();
+        window.location.href = "/"
+    }).fail(function(data) {
+            console.log("Unable to log out: " + data.responseText)
+        })
 }
