@@ -25,14 +25,14 @@
         </div>
     </nav>
     <div id="err"></div>
-        <h1 class="page-header">Mes candidatures</h1>
-        <button class="btn btn-success" data-toggle="modal" data-target="#modal-newApplication">Nouvelle candidature</button>
+        <h1 class="page-header">My applications</h1>
+        <button class="btn btn-success" onclick="showNewModal()">Nouvelle candidature</button>
 
         <table class="table" >
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Entreprise</th>
+                    <th>Company</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -43,24 +43,24 @@
         <div class="modal fade" id="modal-newApplication">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header"><h3>Déposer une candidature</h3></div>
+                    <div class="modal-header"><h3>new application</h3></div>
                     <div class="modal-body" id="newApplication">
                         <div class="form-group">
-                            <label for="dateInput">Date de la candidature</label>
+                            <label for="dateInput">Date</label>
                             <input type="date" id="dateInput" class="form-control"/>
                         </div>
                         <div class="form-group">
-                            <label for="companyInput">Entreprise</label>
+                            <label for="companyInput">Company</label>
                             <input type="text" placeholder="Nom de l'entreprise" class="form-control" id="companyInput"/>
                         </div>
                         <div class="form-group">
-                            <label for="noteInput">Note</label>
+                            <label for="noteInput">Description (optional)</label>
                             <textarea id="noteInput" rows="5" class="form-control"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-success" data-dismiss="modal" onclick="newApplication()">Déposer</button>
-                        <button class="btn btn-success" data-dismiss="modal">Annuler</button>
+                        <button class="btn btn-success" data-dismiss="modal" onclick="newApplication()" id="modal-valid">Submit</button>
+                        <button class="btn btn-success" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>

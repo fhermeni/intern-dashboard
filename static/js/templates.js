@@ -33,36 +33,36 @@ exports["application_line"] = function tmpl_application_line(locals) {
         id: true,
         'class': true
     }) + '><td>' + jade.escape((jade.interp = date) == null ? '' : jade.interp) + '</td><td>' + jade.escape((jade.interp = company) == null ? '' : jade.interp) + '</td><td><a' + jade.attrs({
-        onclick: 'comment(' + id + ')',
-        title: 'Description de l\'offre',
+        onclick: 'showEditModal(' + id + ')',
+        title: 'Edit',
         'class': ['action_button']
     }, {
         onclick: true,
         title: true
-    }) + '><i class="glyphicon glyphicon-comment"></i></a><a' + jade.attrs({
+    }) + '><i class="glyphicon glyphicon-pencil"></i></a><a' + jade.attrs({
         onclick: 'addInterview(' + id + ')',
-        title: 'D\xe9clarer un entretien',
+        title: 'New interview',
         'class': ['action_button']
     }, {
         onclick: true,
         title: true
     }) + '><span' + jade.attrs({ id: 'interviews-' + id }, { id: true }) + '>' + jade.escape((jade.interp = nbInterviews) == null ? '' : jade.interp) + '</span><i class="glyphicon glyphicon-briefcase"></i></a><a' + jade.attrs({
         onclick: 'setStatus(' + id + ',\'open\')',
-        title: 'Candidature en suspend',
+        title: 'Set pending',
         'class': ['action_button']
     }, {
         onclick: true,
         title: true
     }) + '><i class="glyphicon glyphicon-question-sign action_button"></i></a><a' + jade.attrs({
         onclick: 'setStatus(' + id + ',\'denied\')',
-        title: 'Candidature refus\xe9e',
+        title: 'Set rejected',
         'class': ['action_button']
     }, {
         onclick: true,
         title: true
     }) + '><i class="glyphicon glyphicon-remove-sign action_button"></i></a><a' + jade.attrs({
         onclick: 'setStatus(' + id + ',\'granted\')',
-        title: 'Candidature accept\xe9e',
+        title: 'Set granted!',
         'class': ['action_button']
     }, {
         onclick: true,

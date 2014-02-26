@@ -55,7 +55,7 @@ app.post('/users/:user/', newApplication);
 app.put('/users/:user/:appId/interviews', addInterview);
 app.put('/users/:user/:appId/status', setStatus);
 app.get('/users/:user/', getApplications)
-app.get('/users/:user/:appId', getApplication)
+app.put('/users/:user/:appId', updateApplication)
 app.post('/login', login)
 app.post('/logout', logout)
 
@@ -105,16 +105,14 @@ function getApplications(req, res) {
     })
 }
 
-function getApplication(req, res) {
-    var user = req.body.user || ""
-    var appId = req.body.appId || ""
-    var p = backend.getApplication(user, appId)
-    if (appId == undefined) {
-        res.send(404, "Unknown application or user")
-        return
-    }
-    res.set("Content-type", "text/json");
-    res.send(p);
+function updateApplication(req, res) {
+    backend.updateApplication(req.params.user, req.params.appId, req.body, function(err) {
+        if (err) {
+            res.send(400, err.message)
+        } else {
+            res.send(204)
+        }
+    })
 }
 
 function newApplication(req, res) {

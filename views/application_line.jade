@@ -2,14 +2,14 @@ tr(id="app-"+id,class="app-" + status)
     td #{date}
     td #{company}
     td
-        a(onclick="comment(#{id})",title="Description de l'offre").action_button
-            i.glyphicon.glyphicon-comment
-        a(onclick="addInterview(#{id})",title="Déclarer un entretien").action_button
+        a(onclick="showEditModal(#{id})",title="Edit").action_button
+            i.glyphicon.glyphicon-pencil
+        a(onclick="addInterview(#{id})",title="New interview").action_button
             span(id="interviews-"+id) #{nbInterviews}
             i.glyphicon.glyphicon-briefcase
-        a(onclick="setStatus(#{id},'open')",title="Candidature en suspend").action_button
+        a(onclick="setStatus(#{id},'open')",title="Set pending").action_button
             i.glyphicon.glyphicon-question-sign.action_button
-        a(onclick="setStatus(#{id},'denied')",title="Candidature refusée").action_button
+        a(onclick="setStatus(#{id},'denied')",title="Set rejected").action_button
             i.glyphicon.glyphicon-remove-sign.action_button
-        a(onclick="setStatus(#{id},'granted')",title="Candidature acceptée").action_button
+        a(onclick="setStatus(#{id},'granted')",title="Set granted!").action_button
             i.glyphicon.glyphicon-ok-sign

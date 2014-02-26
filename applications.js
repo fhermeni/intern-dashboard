@@ -10,11 +10,21 @@ module.exports = {
         next(null, app)
     },
 
-    getApplication : function(user, id) {
+    updateApplication : function(user, id, cnt, next) {
         if (empty("user", user, next) || empty("id", id, next) || !userExists(user, next) || !appExists(user, id, next)) {
             return
         }
-        next(null, applications[user].id)
+        var app = applications[user][id]
+        if (cnt.hasOwnProperty("note")) {
+            app.note = cnt.note
+        }
+        if (cnt.hasOwnProperty("date")) {
+            app.date = cnt.date
+        }
+        if (cnt.hasOwnProperty("company")) {
+            app.company = cnt.company
+        }
+        next(null)
     },
 
     getApplications : function(user, next) {
