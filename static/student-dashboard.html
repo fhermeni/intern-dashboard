@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/client.js"></script>
+    <script src="js/templates.js"></script>
+    <script src="js/dashboard.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-default" role="navigation">
+        <div container-fluid>
+            <div class="navbar-header">
+                <a href="#" class="navbar-brand" id="user"></a>
+            </div>
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" onclick="logout()"><i class="glyphicon glyphicon-off"> </i></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="err"></div>
+        <h1 class="page-header">Mes candidatures</h1>
+        <button class="btn btn-success" data-toggle="modal" data-target="#modal-newApplication">Nouvelle candidature</button>
+
+        <table class="table" >
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Entreprise</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="applications">
+            </tbody>
+        </table>
+
+        <div class="modal fade" id="modal-newApplication">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header"><h3>Déposer une candidature</h3></div>
+                    <div class="modal-body" id="newApplication">
+                        <div class="form-group">
+                            <label for="dateInput">Date de la candidature</label>
+                            <input type="date" id="dateInput" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyInput">Entreprise</label>
+                            <input type="text" placeholder="Nom de l'entreprise" class="form-control" id="companyInput"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="noteInput">Note</label>
+                            <textarea id="noteInput" rows="5" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" data-dismiss="modal" onclick="newApplication()">Déposer</button>
+                        <button class="btn btn-success" data-dismiss="modal">Annuler</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</body>
+</html>
