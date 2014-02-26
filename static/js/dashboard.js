@@ -1,7 +1,4 @@
-/**
- * Created by fhermeni on 26/02/2014.
- */
-var applications = Array()
+var applications = []
 
 Date.prototype.toDateInputValue = (function() {
     var local = new Date(this);
@@ -87,8 +84,7 @@ function setStatus(id, status) {
         url:'/users/' + userId + '/' + id + "/status",
         data : {status : status}
     }).done(function() {
-        $("#app-" + id).removeClass("app-denied app-granted app-open")
-        $("#app-" + id).addClass("app-"+status)
+        $("#app-" + id).removeClass("app-denied app-granted app-open").addClass("app-"+status)
         applications[id].status = status
     })
     .fail(function(xhr) {$("#err").html("<div class='alert alert-danger'>" + xhr.responseText + "</div>")});

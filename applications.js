@@ -33,7 +33,7 @@ module.exports = {
         }
         var res = applications[user]
         if (!res) {
-            res = Array()
+            res = []
             applications[user] = res
         }
         next(null, res)
@@ -74,7 +74,7 @@ module.exports = {
     }
 }
 
-var applications = Array()
+var applications = []
 nbApplications = 0;
 
 var users = [
@@ -95,7 +95,7 @@ function userExists(userId, next) {
     if (userId >= 0 && userId < users.length) {
         return true;
     }
-    next(new Error("Unknown user '" + user + "'"))
+    next(new Error("Unknown user '" + userId + "'"))
     return false
 }
 
