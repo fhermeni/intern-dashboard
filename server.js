@@ -119,7 +119,7 @@ function newApplication(req, res) {
     backend.newApplication(req.params.user, req.body.date, req.body.company, req.body.note,
     function (err, app) {
         if (err) {
-            res.send(400, err)
+            res.send(400, err.message)
         } else {
             res.location("rest/users/" + req.params.user + "/" + app.id)
             res.set("Content-type", "text/json")

@@ -9,6 +9,7 @@ Date.prototype.toDateInputValue = (function() {
 function showNewModal() {
     $("#dateInput").val(new Date().toDateInputValue())
     $("#modal-valid").html("Submit").attr("onclick", "newApplication()")
+    $("#modal-err").html("")
     $("#modal-newApplication").modal('show')
 }
 
@@ -23,7 +24,8 @@ function newApplication() {
     $.post("/users/" + id + "/", application, function(data) {
         $("#applications").append(templatizer.application_line(data))
         applications.push(data)
-    }).fail(function(data) {$("#err").html("<div class='alert alert-danger'>" + data.responseText + "</div>")});
+        $("#modal-newApplication").modal('hide')
+    }).fail(function(data) {$("#modal-err").html("<div class='alert alert-danger'>" + data.responseText + "</div>")});
 }
 
 function updateApplication(id) {
@@ -54,7 +56,8 @@ function updateApplication(id) {
         //Refresh the UI
         $("#app-" + id + " td:nth-child(1)").html(d)
         $("#app-" + id + " td:nth-child(2)").html(c)
-    }).fail(function(xhr) {$("#err").html("<div class='alert alert-danger'>" + xhr.responseText + "</div>")});
+        $("#modal-newApplication").modal('hide')
+    }).fail(function(xhr) {$("#modal-err").html("<div class='alert alert-danger'>" + xhr.responseText + "</div>")});
 }
 
 function showEditModal(id) {
@@ -63,6 +66,7 @@ function showEditModal(id) {
     $("#dateInput").val(applications[id].date)
     $("#noteInput").val(applications[id].note)
     $("#modal-valid").html("Update").attr("onclick", "updateApplication(" + id + ")")
+    $("#modal-err").html("")
     $("#modal-newApplication").modal('show')
 }
 

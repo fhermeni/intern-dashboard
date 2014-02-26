@@ -1,7 +1,7 @@
 module.exports = {
 
     newApplication : function(user, date, company, note, next) {
-        if (empty("user", user, next) || empty("date", date, next) || empty("company", company, next) || !userExists(user, next)) {
+        if (empty("date", date, next) || empty("company", company, next) || !userExists(user, next)) {
             return
         }
         var id = applications[user].length
@@ -11,7 +11,7 @@ module.exports = {
     },
 
     updateApplication : function(user, id, cnt, next) {
-        if (empty("user", user, next) || empty("id", id, next) || !userExists(user, next) || !appExists(user, id, next)) {
+        if (!appExists(user, id, next)) {
             return
         }
         var app = applications[user][id]
@@ -19,16 +19,24 @@ module.exports = {
             app.note = cnt.note
         }
         if (cnt.hasOwnProperty("date")) {
+            if (cnt.date.length == 0) {
+                next(new Error("The date is required"))
+                return
+            }
             app.date = cnt.date
         }
         if (cnt.hasOwnProperty("company")) {
+            if (cnt.company.length == 0) {
+                next(new Error("Company is required"))
+                return
+            }
             app.company = cnt.company
         }
         next(null)
     },
 
     getApplications : function(user, next) {
-        if (empty("user", user, next) || !userExists(user, next)) {
+        if (!userExists(user, next)) {
             return
         }
         var res = applications[user]
@@ -40,14 +48,14 @@ module.exports = {
     },
 
     incInterview : function(user, id, next) {
-        if (empty("user", user, next) || empty("id", id, next) || !userExists(user, next) || !appExists(user, id, next)) {
+        if (!appExists(user, id, next)) {
             return
         }
         applications[user][id].nbInterviews++
         next(null, applications[user][id].nbInterviews)
     },
     setStatus : function(user, id, st, next) {
-        if (empty("user", user, next) || empty("id", id, next) || empty("status", st, next) || !userExists(user, next) || !appExists(user, id, next)) {
+        if (empty("status", st, next) || !appExists(user, id, next)) {
             return
         }
         if (st == "denied" || st == "granted" || st == "open") {
@@ -58,7 +66,7 @@ module.exports = {
         }
     },
     setNote : function(user, id, n, next) {
-        if (empty("user", user, next) || empty("id", id, next) || !userExists(user, next) || !appExists(user, id, next)) {
+        if (!appExists(user, id, next)) {
             return
         }
         applications[user].id.note = n;
@@ -92,7 +100,7 @@ function empty(id, x, next) {
 }
 
 function userExists(userId, next) {
-    if (userId >= 0 && userId < users.length) {
+    if (userId != undefined && userId >= 0 && userId < users.length) {
         return true;
     }
     next(new Error("Unknown user '" + userId + "'"))
@@ -101,7 +109,7 @@ function userExists(userId, next) {
 
 function appExists(user, id, next) {
     if (userExists(user, next)) {
-        if (id >= 0 && id < applications[user].length) {
+        if (id != undefined && id >= 0 && id < applications[user].length) {
             return true
         }
         next(new Error("Unknown application id '" + id + "'"))
