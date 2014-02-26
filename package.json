@@ -13,7 +13,8 @@
     "jade": "0.20.0",
     "mongoose": "2.4.8",
     "socket.io": "0.8.7",
-    "pg": "2.x"
+    "pg": "2.x",
+    "templatizer":"0.2.10"
   },
   "devDependencies": {
     "vows": "0.5.x",
