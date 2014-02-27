@@ -71,6 +71,51 @@ exports["application_line"] = function tmpl_application_line(locals) {
     return buf.join('');
 };
 
+// student_progress_bar.jade compiled template
+exports["student_progress_bar"] = function tmpl_student_progress_bar(locals) {
+    var buf = [];
+    var locals_ = locals || {}, rejected = locals_.rejected, waiting = locals_.waiting, pending = locals_.pending, granted = locals_.granted;
+    buf.push('<div class="progress">');
+    if (rejected > 0) {
+        buf.push('<div' + jade.attrs({
+            style: 'width: ' + rejected + '%',
+            'class': [
+                'progress-bar',
+                'progress-bar-danger'
+            ]
+        }, { style: true }) + '>' + jade.escape((jade.interp = rejected) == null ? '' : jade.interp) + '%</div>');
+    }
+    if (waiting > 0) {
+        buf.push('<div' + jade.attrs({
+            style: 'width: ' + waiting + '%',
+            'class': [
+                'progress-bar',
+                'progress-bar-warning'
+            ]
+        }, { style: true }) + '>' + jade.escape((jade.interp = waiting) == null ? '' : jade.interp) + '%</div>');
+    }
+    if (pending > 0) {
+        buf.push('<div' + jade.attrs({
+            style: 'width: ' + pending + '%',
+            'class': [
+                'progress-bar',
+                'progress-bar-info'
+            ]
+        }, { style: true }) + '>' + jade.escape((jade.interp = pending) == null ? '' : jade.interp) + '%</div>');
+    }
+    if (granted > 0) {
+        buf.push('<div' + jade.attrs({
+            style: 'width: ' + granted + '%',
+            'class': [
+                'progress-bar',
+                'progress-bar-success'
+            ]
+        }, { style: true }) + '>' + jade.escape((jade.interp = granted) == null ? '' : jade.interp) + '%</div>');
+    }
+    buf.push('</div>');
+    return buf.join('');
+};
+
 
 // attach to window or export with commonJS
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {

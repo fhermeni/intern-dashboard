@@ -56,6 +56,8 @@ app.put('/users/:user/:appId/interviews', addInterview);
 app.put('/users/:user/:appId/status', setStatus);
 app.get('/users/:user/', getApplications)
 app.put('/users/:user/:appId', updateApplication)
+app.get('/majors/', getMajors)
+app.get('/majors/:major', getMajor)
 app.post('/login', login)
 app.post('/logout', logout)
 
@@ -147,16 +149,18 @@ function setStatus(req, res) {
         }
     })
 }
-function setNote(req, res) {
-    backend.setNote(req.params.user, req.params.appId, req.body.note, function (err) {
-        if (err) {
-            res.send(400, err.message)
-        } else {
-            res.send(204)
-        }
-    })
+
+function getMajors(req, res) {
+    var majors = backend.listMajors()
+    res.set("Content-type", "text/json")
+    res.send(200, majors)
 }
 
+function getMajor(req, res) {
+    var students = backend.getMajor(req.params.major)
+    res.set("Content-type", "text/json")
+    res.send(students)
+}
 app.get('/500', function(req, res){
     throw new Error('This is a 500 Error');
 });
@@ -171,5 +175,28 @@ function NotFound(msg){
     Error.captureStackTrace(this, arguments.callee);
 }
 
+//Sample workload
+for (var i = 0; i < 100; i++) {
+    m = "CSSR"
+    if (i%2 == 0) {
+        m = "ALD"
+    } else if (i%5 == 0) {
+        m = "IHM"
+    }
+    var u = backend.newUser("u-" + i, "p" + i, m)
+    for (var j = 0; j < 20; j++) {
+        backend.newApplication(u.id, j + "/01/2014", "company-" + j, "sample note for " + j, function(err, app){
+            if (i % 7 == 0 && j == 17) { //Some granted
+                backend.setStatus(u.id, app.id, "granted", function(err) {if (err) {console.log(err.message)}})
+            } else if (i % 5 == 0 && j % 3 == 0) {
+                backend.incInterview(u.id, app.id, function(err) {if (err) {console.log(err.message)}})
+                if (j == 3) {
+                    backend.setStatus(u.id, app.id, "denied", function(err) {if (err) {console.log(err.message)}})
+                }
+            }
+        })
+    }
+
+}
 
 console.log('Listening on http://0.0.0.0:' + port );

@@ -6,11 +6,29 @@
 .app-granted {
     background-color: #dff0d8;
 }
+
+.status-granted {
+    background-color: #5cb85c;
+}
+
+.status-pending {
+    background-color: #5bc0de;
+}
+
 .app-open {
     background-color: inherit;
 }
-.app-denied {
+
+.status-open {
+    background-color: #f0ad4e;
+}
+
+.app-denied, {
       background-color: #f2dede;
+}
+
+.status-rejected {
+    background-color: #d9534f;
 }
 
 .login {

@@ -109,8 +109,12 @@ function getApplications() {
         $("#err").html("<div class='alert alert-danger'>" + data.responseText + "</div>")
     })
 }
+
 $( document ).ready(function () {
     var mail = sessionStorage.getItem("email")
+    if (mail == undefined) {
+        window.location.href = "/"
+    }
     var major = sessionStorage.getItem("major")
     $("#user").html("[" + major + "] " + mail)
 

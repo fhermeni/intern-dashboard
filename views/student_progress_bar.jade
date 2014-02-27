@@ -1,0 +1,10 @@
+div.progress
+   if (rejected > 0)
+    div.progress-bar.progress-bar-danger(style="width: #{rejected}%") #{rejected}%
+   if (waiting > 0)
+    div.progress-bar.progress-bar-warning(style="width: #{waiting}%") #{waiting}%
+   if (pending > 0)
+    div.progress-bar.progress-bar-info(style="width: #{pending}%") #{pending}%
+   if (granted > 0)
+    div.progress-bar.progress-bar-success(style="width: #{granted}%") #{granted}%
+

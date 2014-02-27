@@ -4,6 +4,9 @@ module.exports = {
         if (empty("date", date, next) || empty("company", company, next) || !userExists(user, next)) {
             return
         }
+        if (!applications.hasOwnProperty(user)) {
+            applications[user] = []
+        }
         var id = applications[user].length
         var app = {"id" : id, date : date, company : company, note : note, nbInterviews: 0, status : "open"}
         applications[user].push(app)
@@ -79,6 +82,32 @@ module.exports = {
                 return
             }
         })
+    },
+    listMajors : function() {
+        var m = {}
+        users.forEach(function (u) {
+            if (u.hasOwnProperty("major")) {
+                m[u.major] = true
+            }
+        })
+        return Object.keys(m);
+    },
+    getMajor : function(m) {
+        var students = []
+        users.forEach(function (u) {
+            if (u.hasOwnProperty("major")) {
+                if (u.major == m) {
+                    students.push(u)
+                }
+            }
+        })
+        return students
+    },
+    newUser : function(mail, p, major) {
+        var id = users.length
+        var u = {id : id, login: mail, password: p, major : major}
+        users.push(u)
+        return u
     }
 }
 
