@@ -1,136 +1,148 @@
 var students = []
 var applications = []
-var majors = []
+var majors = {}
+var view = {}
 Date.prototype.toDateInputValue = (function() {
     var local = new Date(this);
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
     return local.toJSON().slice(0,10);
 })
 
-function getMajors() {
-    $.get("/majors/", function(data) {
-        var buf = ""
-        data.forEach(function (m) {
-            buf += '<li><a onclick="loadMajor(\'' + m + '\')">' + m + '</a></li>'
-            majors.push(m)
-        })
-        //buf += "<li><a href='loadMajors()'><i>All</i></a></li>"
-        $("#majors").html(buf)
+function hide(m, doStats) {
+    $("#" + m).attr("onclick","show('" + m + "', true)")
+    $("#" + m).removeClass("active")
+    delete view[m]
+    if (doStats) {
+        makeStats()
+    }
+
+}
+
+function showAll() {
+    majors.forEach(function (m) {
+        show(m, false)
+    })
+    makeStats()
+}
+
+function hideAll() {
+    majors.forEach(function (m) {
+        hide(m, false)
+    })
+    makeStats()
+}
+function show(m, doStats) {
+        $("#" + m).attr("onclick","hide('" + m + "', true)")
+        $("#" + m).addClass("active")
+        view[m] = true
+        if (doStats) {
+            makeStats()
+        }
+}
+
+function getMajors2() {
+    $.get("/majors.json", function(data){
+        majors = Object.keys(data)
+        $("#majors").html(templatizer.majors_button({"majors" : majors}))
+        showAll()
+        getUsers()
     }).fail(function(data) {$("#err").html("<div class='alert alert-danger'>" + data.responseText + "</div>")})
 }
 
-function categorizeStudents() {
+function loadApplications() {
+    $.get("/applications/", function(apps) {
+        console.log(apps.length + " application(s) at total")
+        applications = apps
+        makeStats()
+    }).fail(function(data) {$("#err").html("<div class='alert alert-danger'>" + data.responseText + "</div>")})
+}
+
+function makeStats() {
+    var toKeep = applications.filter(function(app) {
+        var userId = app.userId
+        var m = students[userId].major
+        return view.hasOwnProperty(m)
+    })
+    console.log(toKeep.length + " application(s) to analyse")
+    var studentStats = {}
     var nbGranted = 0
-    var nbPendingInterviews = 0
+    var nbDenied = 0
+    var nbPending = 0
     var nbOpen = 0
-    var nbRejected = 0
-
-    applications = []
-    students.forEach(function (s) {
-        $.ajax({
-                type:'GET',
-                async: false,
-                url:'/users/' + s.id + '/'
-            }).done(function(apps) {
-            if (!applications.hasOwnProperty(s.id)) {
-                applications[s.id] = []
-            }
-            apps.forEach(function (a) {
-                applications[s.id].push(a)
-            })
-            }).fail(function(data) {$("#err").html("<div class='alert alert-danger'>" + data.responseText + "</div>")})
-    })
-
-
-    applications.forEach(function (userApps){
-            var granted = false
-            var rejected = 0
-            var opened = 0
-            var pendingInterviews = 0
-            userApps.forEach(function (app) {
-                if (app.status == "granted") {
-                    granted = true
-                    return false
-                } else if (app.status == "open") {
-                    if (app.nbInterviews > 0) {
-                        pendingInterviews++
-                    } else {
-                        opened++;
-                    }
-                } else if (app.status == "denied") {
-                    rejected++
-                }
-            })
-            //Now we classify the users
-            if (granted) {
-                nbGranted++
-            } else if (pendingInterviews > 0) {
-                nbPendingInterviews++;
-            } else if (opened > 0) {
-                nbOpen++
+    toKeep.forEach(function(app) {
+        var uId = app.userId
+        if (!studentStats.hasOwnProperty(uId)) {
+            studentStats[uId] = {granted : false, nbOpen : 0, nbPending : 0, nbDenied : 0}
+        }
+        if (app.status == "granted") {
+            studentStats[uId].granted = true
+        } else if (app.status == "open") {
+            if (app.nbInterviews > 0) {
+                studentStats[uId].nbPending++
             } else {
-                nbRejected++
+                studentStats[uId].nbOpen++
             }
+        } else if (app.status == "denied") {
+            studentStats[uId].nbDenied++
+        }
     })
 
-    //And we draw a nice progress bar
-    console.log(applications.length)
-    var stats = {
-                 waiting : Math.round((nbOpen / students.length) * 100),
-                 pending : Math.round((nbPendingInterviews / students.length) * 100),
-                 granted : Math.round((nbGranted / students.length) * 100)
-    }
-    stats.rejected  = 100 - stats.waiting - stats.pending - stats.granted
-    console.log(stats)
-    console.log(templatizer.student_progress_bar(stats))
-    $("#student-progress").html(templatizer.student_progress_bar(stats))
-
-    //And the student table
-    var buf = ""
-    var i = 0
-    applications.forEach(function (userApps){
-        var granted = false
-        var rejected = 0
-        var opened = 0
-        var pendingInterviews = 0
-        var login = students[i++].login
-        userApps.forEach(function (app) {
-            if (app.status == "granted") {
-                granted = true
-                return false
-            } else if (app.status == "open") {
-                if (app.nbInterviews > 0) {
-                    pendingInterviews++
-                } else {
-                    opened++;
-                }
-            } else if (app.status == "denied") {
-                rejected++
-            }
-        })
-        //Now we classify the user
+    var ids = Object.keys(studentStats)
+    ids.forEach(function(uid) {
+        var s = studentStats[uid]
+        studentStats[uid].grade = 1
+        if (s.granted) {
+            studentStats[uid].grade = 4
+        } else if (s.nbPending > 0) {
+            studentStats[uid].grade = 3
+        } else if (s.nbOpen > 0) {
+            studentStats[uid].grade = 2
+        }
+    })
+    ids.sort(function (a, b) {
+        return studentStats[b].grade - studentStats[a].grade
+    })
+    var tableBuf = ""
+    ids.forEach(function(uid) {
+        var s = studentStats[uid]
+        var username = students[uid].username
         var style = "rejected"
-        if (granted) {
+        if (s.granted) {
+            nbGranted++
             style = "granted"
-        } else if (pendingInterviews > 0) {
+        } else if (s.nbPending > 0) {
+            nbPending++
             style = "pending"
-        } else if (opened > 0) {
+        } else if (s.nbOpen > 0) {
+            nbOpen++
             style = "open"
         }
-        buf += "<tr class='status-" + style + "'><td><span class='checkbox'><input type='checkbox'/><label>" + login + "</label></span></td></tr>"
+        console.log(students[uid])
+        tableBuf += templatizer.student_line({stats: {username : username, id : uid, email : students[uid].email, style : style}})
     })
-    $("#studentTable").html(buf)
 
+    //Progress bar
+    var nbStudents = Object.keys(studentStats).length
+    console.log(nbStudents + " has these major(s)")
+    var stats = {
+        waiting : Math.floor((nbOpen / nbStudents) * 100),
+        pending : Math.floor((nbPending / nbStudents) * 100),
+        granted : Math.floor((nbGranted / nbStudents) * 100)
+    }
+    stats.rejected  = 100 - stats.waiting - stats.pending - stats.granted
+    $("#student-progress").html(templatizer.student_progress_bar(stats))
+
+
+    $("#studentTable").html(tableBuf)
 }
 
-function loadMajor(m) {
-    students = []
-    $.get("/majors/" + m, function(data) {
+function getUsers() {
+    $.get("/users/", function(data) {
         students = data
-        categorizeStudents()
+        console.log(students.length + " student(s) total")
+        loadApplications()
     }).fail(function(data) {$("#err").html("<div class='alert alert-danger'>" + data.responseText + "</div>")})
 }
-
 $( document ).ready(function () {
-    getMajors()
+    getMajors2()
 })

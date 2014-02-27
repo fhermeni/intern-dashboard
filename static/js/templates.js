@@ -71,6 +71,69 @@ exports["application_line"] = function tmpl_application_line(locals) {
     return buf.join('');
 };
 
+// majors_button.jade compiled template
+exports["majors_button"] = function tmpl_majors_button(locals) {
+    var buf = [];
+    var locals_ = locals || {}, majors = locals_.majors;
+    buf.push('<div class="btn-group"><button id="allMajors" onclick="showAll()" class="btn btn-default btn-sm">all</button><button id="noMajors" onclick="hideAll()" class="btn btn-default btn-sm">none</button></div><div class="btn-group">');
+    (function () {
+        var $$obj = majors;
+        if ('number' == typeof $$obj.length) {
+            for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
+                var m = $$obj[$index];
+                buf.push('<button' + jade.attrs({
+                    id: m,
+                    onclick: 'hide(\'' + m + '\', true)',
+                    'class': [
+                        'btn',
+                        'btn-default',
+                        'btn-sm',
+                        'active'
+                    ]
+                }, {
+                    id: true,
+                    onclick: true
+                }) + '>' + jade.escape((jade.interp = m) == null ? '' : jade.interp) + '</button>');
+            }
+        } else {
+            var $$l = 0;
+            for (var $index in $$obj) {
+                $$l++;
+                var m = $$obj[$index];
+                buf.push('<button' + jade.attrs({
+                    id: m,
+                    onclick: 'hide(\'' + m + '\', true)',
+                    'class': [
+                        'btn',
+                        'btn-default',
+                        'btn-sm',
+                        'active'
+                    ]
+                }, {
+                    id: true,
+                    onclick: true
+                }) + '>' + jade.escape((jade.interp = m) == null ? '' : jade.interp) + '</button>');
+            }
+        }
+    }.call(this));
+    buf.push('</div>');
+    return buf.join('');
+};
+
+// student_line.jade compiled template
+exports["student_line"] = function tmpl_student_line(locals) {
+    var buf = [];
+    var locals_ = locals || {}, stats = locals_.stats;
+    buf.push('<tr' + jade.attrs({
+        id: 'student-' + stats.id,
+        'class': ['status-' + stats.style]
+    }, {
+        id: true,
+        'class': true
+    }) + '><td><span class="checkbox"><input type="checkbox"/><label><a' + jade.attrs({ href: 'mailto:' + stats.email + '' }, { href: true }) + '>' + jade.escape((jade.interp = stats.username) == null ? '' : jade.interp) + '</a></label></span></td></tr>');
+    return buf.join('');
+};
+
 // student_progress_bar.jade compiled template
 exports["student_progress_bar"] = function tmpl_student_progress_bar(locals) {
     var buf = [];

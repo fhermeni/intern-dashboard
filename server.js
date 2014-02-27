@@ -55,9 +55,9 @@ app.post('/users/:user/', newApplication);
 app.put('/users/:user/:appId/interviews', addInterview);
 app.put('/users/:user/:appId/status', setStatus);
 app.get('/users/:user/', getApplications)
+app.get('/applications/', getAllApplications)
+app.get('/users/', getAllUsers)
 app.put('/users/:user/:appId', updateApplication)
-app.get('/majors/', getMajors)
-app.get('/majors/:major', getMajor)
 app.post('/login', login)
 app.post('/logout', logout)
 
@@ -107,6 +107,28 @@ function getApplications(req, res) {
     })
 }
 
+function getAllApplications(req, res) {
+    backend.getAllApplications(function(err, apps) {
+        if (err) {
+            res.send(400, err.message)
+        } else {
+            res.set("Content-type", "text/json")
+            res.send(200, apps)
+        }
+    })
+}
+
+function getAllUsers(req, res) {
+    backend.getAllUsers(function(err, users) {
+        if (err) {
+            res.send(400, err.message)
+        } else {
+            res.set("Content-type", "text/json")
+            res.send(200, users)
+        }
+    })
+}
+
 function updateApplication(req, res) {
     backend.updateApplication(req.params.user, req.params.appId, req.body, function(err) {
         if (err) {
@@ -150,17 +172,6 @@ function setStatus(req, res) {
     })
 }
 
-function getMajors(req, res) {
-    var majors = backend.listMajors()
-    res.set("Content-type", "text/json")
-    res.send(200, majors)
-}
-
-function getMajor(req, res) {
-    var students = backend.getMajor(req.params.major)
-    res.set("Content-type", "text/json")
-    res.send(students)
-}
 app.get('/500', function(req, res){
     throw new Error('This is a 500 Error');
 });
@@ -178,12 +189,14 @@ function NotFound(msg){
 //Sample workload
 for (var i = 0; i < 100; i++) {
     m = "CSSR"
-    if (i%2 == 0) {
-        m = "ALD"
-    } else if (i%5 == 0) {
+    if (i%5 == 0) {
         m = "IHM"
+    } else if (i%3 == 0) {
+        m = "IHM"
+    }else if (i%2 == 0) {
+        m = "ALD"
     }
-    var u = backend.newUser("u-" + i, "p" + i, m)
+    var u = backend.newUser("User " + i, "u-" + i + "@unice.fr", "p" + i, m)
     for (var j = 0; j < 20; j++) {
         backend.newApplication(u.id, j + "/01/2014", "company-" + j, "sample note for " + j, function(err, app){
             if (i % 7 == 0 && j == 17) { //Some granted

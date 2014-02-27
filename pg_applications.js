@@ -1,12 +1,21 @@
+/*
+ * students(_id_, username, login, password, major)
+ * application(id, userId, company, note, url)
+ */
+
+
 module.exports = {
 
     newApplication : function(user, date, company, note, next) {
         if (empty("date", date, next) || empty("company", company, next) || !userExists(user, next)) {
             return
         }
-        var id = applications.length
-        var app = {"id" : id, date : date, company : company, note : note, nbInterviews: 0, status : "open", userId : user}
-        applications.push(app)
+        if (!applications.hasOwnProperty(user)) {
+            applications[user] = []
+        }
+        var id = applications[user].length
+        var app = {"id" : id, date : date, company : company, note : note, nbInterviews: 0, status : "open"}
+        applications[user].push(app)
         next(null, app)
     },
 
@@ -14,7 +23,7 @@ module.exports = {
         if (!appExists(user, id, next)) {
             return
         }
-        var app = applications[id]
+        var app = applications[user][id]
         if (cnt.hasOwnProperty("note")) {
             app.note = cnt.note
         }
@@ -39,34 +48,27 @@ module.exports = {
         if (!userExists(user, next)) {
             return
         }
-        res = []
-        applications.forEach(function (app) {
-            if (app.userId == user) {
-                res.push(app)
-            }
-        })
+        var res = applications[user]
+        if (!res) {
+            res = []
+            applications[user] = res
+        }
         next(null, res)
     },
-    getAllApplications : function(next) {
-        next(null, applications)
-    },
-    getAllUsers : function(next) {
-        next(null, users)
-    },
+
     incInterview : function(user, id, next) {
         if (!appExists(user, id, next)) {
             return
         }
-        applications[id].nbInterviews++
-        next(null, applications[id].nbInterviews)
+        applications[user][id].nbInterviews++
+        next(null, applications[user][id].nbInterviews)
     },
-
     setStatus : function(user, id, st, next) {
         if (empty("status", st, next) || !appExists(user, id, next)) {
             return
         }
         if (st == "denied" || st == "granted" || st == "open") {
-            applications[id].status = st;
+            applications[user][id].status = st;
             next(null, st)
         } else {
             next(new Error("Unsupported status '" + st + "'"))
@@ -76,29 +78,43 @@ module.exports = {
         if (!appExists(user, id, next)) {
             return
         }
-        applications[id].note = n;
+        applications[user].id.note = n;
         next(null)
     },
     isRegistered : function(mail, password, next) {
         users.forEach(function(u) {
-            if (u.email == mail && u.password == password) {
+            if (u.login == mail && u.password == password) {
                 next(null, u)
                 return
             }
         })
     },
-    newUser : function(login, mail, p, major) {
+    getMajor : function(m) {
+        var students = []
+        users.forEach(function (u) {
+            if (u.hasOwnProperty("major")) {
+                if (u.major == m) {
+                    students.push(u)
+                }
+            }
+        })
+        return students
+    },
+    newUser : function(mail, p, major) {
         var id = users.length
-        var u = {id : id, username : login, email: mail, password: p, major : major}
+        var u = {id : id, login: mail, password: p, major : major}
         users.push(u)
         return u
     }
 }
 
 var applications = []
+nbApplications = 0;
 
-var users = [{id : 0,
-    username: "Fabien Hermenier", password: "foo", email:"fabien.hermenier@unice.fr", major:"CSSR"}]
+var users = [
+    {id :0, login: "fabien.hermenier@unice.fr", password: "foo", major: "CSSR"},
+    {id :1, login: "fabien.hermenier@inria.fr", password: "bar", admin:true}
+]
 
 
 function empty(id, x, next) {
@@ -119,16 +135,10 @@ function userExists(userId, next) {
 
 function appExists(user, id, next) {
     if (userExists(user, next)) {
-        if (id == undefined || id < 0 || id > applications.length) {
-            next(new Error("Unknown application id '" + id + "'"))
-            return false
+        if (id != undefined && id >= 0 && id < applications[user].length) {
+            return true
         }
-        app = applications[id]
-        if (app.userId != user) {
-            next(new Error("Permission denied. This is not your application"))
-            return false
-        }
-
+        next(new Error("Unknown application id '" + id + "'"))
     }
-    return true
+    return false
 }

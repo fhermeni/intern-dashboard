@@ -1,0 +1,6 @@
+div.btn-group
+    button.btn.btn-default.btn-sm#allMajors(onclick="showAll()") all
+    button.btn.btn-default.btn-sm#noMajors(onclick="hideAll()") none
+div.btn-group
+    for m in majors
+        button.btn.btn-default.btn-sm.active(id=m,onclick="hide('#{m}', true)") #{m}
