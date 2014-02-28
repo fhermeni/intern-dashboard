@@ -7,6 +7,7 @@ module.exports = {
         var id = applications.length
         var app = {"id" : id, date : date, company : company, note : note, nbInterviews: 0, status : "open", userId : user}
         applications.push(app)
+        ping(user)
         next(null, app)
     },
 
@@ -32,6 +33,7 @@ module.exports = {
             }
             app.company = cnt.company
         }
+        ping(user)
         next(null)
     },
 
@@ -58,6 +60,7 @@ module.exports = {
             return
         }
         applications[id].nbInterviews++
+        ping(user)
         next(null, applications[id].nbInterviews)
     },
 
@@ -67,6 +70,7 @@ module.exports = {
         }
         if (st == "denied" || st == "granted" || st == "open") {
             applications[id].status = st;
+            ping(user)
             next(null, st)
         } else {
             next(new Error("Unsupported status '" + st + "'"))
@@ -77,6 +81,7 @@ module.exports = {
             return
         }
         applications[id].note = n;
+        ping(user)
         next(null)
     },
     isRegistered : function(mail, password, next) {
@@ -91,6 +96,7 @@ module.exports = {
         var id = users.length
         var u = {id : id, username : login, email: mail, password: p, major : major}
         users.push(u)
+        ping(id)
         return u
     }
 }
@@ -131,4 +137,8 @@ function appExists(user, id, next) {
 
     }
     return true
+}
+
+function ping(uId) {
+    users[uId].lastUpdate = new Date().getTime()
 }

@@ -2,15 +2,20 @@ var students = []
 var applications = []
 var majors = {}
 var view = {}
+var selected = []
+var autoClose = {}
 Date.prototype.toDateInputValue = (function() {
     var local = new Date(this);
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
     return local.toJSON().slice(0,10);
 })
 
+/*
+ * Manage the view
+ */
+
 function hide(m, doStats) {
-    $("#" + m).attr("onclick","show('" + m + "', true)")
-    $("#" + m).removeClass("active")
+    $("#" + m).attr("onclick","show('" + m + "', true)").removeClass("active")
     delete view[m]
     if (doStats) {
         makeStats()
@@ -32,12 +37,39 @@ function hideAll() {
     makeStats()
 }
 function show(m, doStats) {
-        $("#" + m).attr("onclick","hide('" + m + "', true)")
-        $("#" + m).addClass("active")
-        view[m] = true
-        if (doStats) {
-            makeStats()
-        }
+    $("#" + m).attr("onclick","hide('" + m + "', true)").addClass("active")
+    view[m] = true
+    if (doStats) {
+        makeStats()
+    }
+}
+
+function updateAutoClose(id, r) {
+    v = $("#"+id).val()
+    autoClose[id] =  v
+    if (r) {
+        makeStats()
+    }
+}
+/*
+ Manage the student selection
+ */
+function selectAll() {
+    console.log("all")
+    $("input[type='checkbox']").attr('checked', true)
+}
+
+function selectNone() {
+    console.log("none")
+    $("input[type='checkbox']").attr('checked', false)
+}
+
+function invertSelection() {
+    console.log("invert")
+    $("input[type='checkbox']").each( function() {
+        console.log("hop")
+        $(this).attr('checked', !$(this).attr('checked'))
+    })
 }
 
 function getMajors2() {
@@ -69,10 +101,17 @@ function makeStats() {
     var nbDenied = 0
     var nbPending = 0
     var nbOpen = 0
+    var currentDate = new Date().getTime()
     toKeep.forEach(function(app) {
         var uId = app.userId
+        app["ignore"] = false
         if (!studentStats.hasOwnProperty(uId)) {
-            studentStats[uId] = {granted : false, nbOpen : 0, nbPending : 0, nbDenied : 0}
+            studentStats[uId] = {granted : false,
+                                nbOpen : 0,
+                                nbPending : 0,
+                                nbClosedPending: 0,
+                                nbDenied : 0,
+                                nbApplications : 0}
         }
         if (app.status == "granted") {
             studentStats[uId].granted = true
@@ -80,11 +119,22 @@ function makeStats() {
             if (app.nbInterviews > 0) {
                 studentStats[uId].nbPending++
             } else {
-                studentStats[uId].nbOpen++
+                if (app.status == "open") {
+                    d = parseInt(app.date)
+                    if (currentDate - d < autoClose["openDeadlineInput"] * 1000 * 3600 * 24) {
+                        studentStats[uId].nbOpen++
+                    } else {
+                        app["ignore"] = true
+                    }
+                }
             }
         } else if (app.status == "denied") {
             studentStats[uId].nbDenied++
+            if (app.nbInterviews > 0) {
+                studentStats[uId].nbClosedPending++
+            }
         }
+        studentStats[uId].nbApplications++
     })
 
     var ids = Object.keys(studentStats)
@@ -106,36 +156,54 @@ function makeStats() {
     ids.forEach(function(uid) {
         var s = studentStats[uid]
         var username = students[uid].username
-        var style = "rejected"
+        var style = "danger"
         if (s.granted) {
             nbGranted++
-            style = "granted"
+            style = "success"
         } else if (s.nbPending > 0) {
             nbPending++
-            style = "pending"
+            style = "active"
         } else if (s.nbOpen > 0) {
             nbOpen++
-            style = "open"
+            style = "warning"
         }
-        console.log(students[uid])
-        tableBuf += templatizer.student_line({stats: {username : username, id : uid, email : students[uid].email, style : style}})
+        var toRender = {username : username,
+                        id : uid,
+                        email : students[uid].email,
+                        style : style,
+                        major: students[uid].major,
+                        strLastUpdate : new Date(parseInt(students[uid].lastUpdate)).toDateString(),
+                        granted : s.granted,
+                        nbOpenPending : s.nbPending,
+                        nbInterwiews: s.nbClosedPending + s.nbPending,
+                        nbOpen : s.nbOpen,
+                        nbApplications : s.nbApplications
+        }
+        tableBuf += templatizer.student_line(toRender)
     })
 
-    //Progress bar
     var nbStudents = Object.keys(studentStats).length
-    console.log(nbStudents + " has these major(s)")
-    var stats = {
-        waiting : Math.floor((nbOpen / nbStudents) * 100),
-        pending : Math.floor((nbPending / nbStudents) * 100),
-        granted : Math.floor((nbGranted / nbStudents) * 100)
-    }
-    stats.rejected  = 100 - stats.waiting - stats.pending - stats.granted
-    $("#student-progress").html(templatizer.student_progress_bar(stats))
-
-
+    drawProgressBar(nbOpen, nbPending, nbGranted, nbStudents)
     $("#studentTable").html(tableBuf)
+    $("#nbStudents").html(nbStudents)
 }
 
+function drawProgressBar(nbOpen, nbPending, nbGranted, nbStudents) {
+    var stats = {
+        waiting_pct : Math.floor((nbOpen / nbStudents) * 100),
+        waiting: nbOpen,
+        pending_pct : Math.floor((nbPending / nbStudents) * 100),
+        pending: nbPending,
+        granted_pct : Math.floor((nbGranted / nbStudents) * 100),
+        granted: nbGranted
+    }
+    stats.rejected_pct  = 100 - stats.waiting - stats.pending - stats.granted
+    stats.rejected = nbStudents - stats.waiting - stats.pending - stats.granted
+    console.log(stats)
+    console.log(nbStudents)
+    $("#student-progress").html(templatizer.student_progress_bar(stats))
+
+}
 function getUsers() {
     $.get("/users/", function(data) {
         students = data
@@ -144,5 +212,7 @@ function getUsers() {
     }).fail(function(data) {$("#err").html("<div class='alert alert-danger'>" + data.responseText + "</div>")})
 }
 $( document ).ready(function () {
+    updateAutoClose("pendingDeadlineInput", false)
+    updateAutoClose("pendingOpenInput", false)
     getMajors2()
 })

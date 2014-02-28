@@ -18,13 +18,15 @@ function newApplication() {
     var application = {
         company : $("#companyInput").val(),
         note : $("#noteInput").val(),
-        date : $("#dateInput").val()
+        date : new Date($("#dateInput").val()).getTime()
     }
     var id = sessionStorage.getItem("userId")
     $.post("/users/" + id + "/", application, function(data) {
-        $("#applications").append(templatizer.application_line(data))
+        data.date = new Date(application.date).toDateString()
         applications.push(data)
         $("#modal-newApplication").modal('hide')
+        $("#applications").append(templatizer.application_line(data))
+
     }).fail(function(data) {$("#modal-err").html("<div class='alert alert-danger'>" + data.responseText + "</div>")});
 }
 
@@ -33,7 +35,8 @@ function updateApplication(id) {
     //Track the changes
     var c = $("#companyInput").val()
     var n = $("#noteInput").val()
-    var d = $("#dateInput").val()
+    var d = new Date($("#dateInput").val()).getTime()
+    console.log(d)
     if (applications[id].company != c) {
         app.company = c
     }
@@ -52,7 +55,7 @@ function updateApplication(id) {
     }).done(function() {
         applications[id].company = c
         applications[id].note = n
-        applications[id].date = d
+        applications[id].date = new Date(d).toDateString()
         //Refresh the UI
         $("#app-" + id + " td:nth-child(1)").html(d)
         $("#app-" + id + " td:nth-child(2)").html(c)
@@ -100,6 +103,7 @@ function getApplications() {
         applications = apps
         var buf = ""
         apps.forEach(function(app) {
+            app.date = new Date(parseInt(app.date)).toDateString()
             buf += templatizer.application_line(app)
         })
 

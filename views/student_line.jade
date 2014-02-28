@@ -1,6 +1,16 @@
-tr(id="student-"+ stats.id,class="status-" + stats.style)
+tr(id="student-"+ id,class=style)
     td
-        span.checkbox
-            input(type="checkbox")
-            label
-                a(href="mailto:#{stats.email}") #{stats.username}
+        input(type="checkbox" value=email)
+    td
+        a(href="mailto:#{email}") #{username}
+    td #{major}
+    td
+        if (granted)
+            i.glyphicon.glyphicon-flag.stat-type
+        |#{nbOpenPending}/#{nbInterwiews}
+        i.glyphicon.glyphicon-briefcase.stat-type(title="pending interviews")
+
+        |#{nbOpen}/#{nbApplications}
+        i.glyphicon.glyphicon-envelope.stat-type(title="open applications")
+    td #{strLastUpdate}
+

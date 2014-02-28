@@ -23,82 +23,76 @@
 
 
     <div class="row">
-        <div class="col-md-5 col-md-offset-1">
+        <div class="col-md-4 col-md-offset-1">
             <div class="page-header">
             <h4>Legend</h4>
             </div>
-            <div>
-                <div class="label label-danger">Rejected</div> a rejected application, or a student with only rejected applications
-            </div>
-            <div>
-                <div class="label label-warning">Open</div> a submitted application with
-                no feedback for the moment, or a student with at least on open applications
-            </div>
-            <div>
-                <div class="label label-info">Pending</div> an open application with pending interviews, or a student
-                with at least one pending application
-            </div>
-            <div>
-                <div class="label label-success">Granted</div> an application that has been granted or a student with one granted application
-            </div>
+            <ul>
+                <li><div class="label label-danger">Rejected</div> a student with only rejected applications</li>
+                <li><div class="label label-warning">Open</div> a student with at least on open application</li>
+                <li><div class="label label-info">Pending</div> a student with at least one pending application</li>
+                <li><div class="label label-success">Granted</div> a student with one granted application</li>
+            </ul>
         </div>
-        <div class="col-md-5">
-            <div id="majors"></div>
+        <div class="col-md-6">
             <div class="page-header">
-            <h4>Maximum delay before stating an application is rejected:</h4>
+            <h4>Filters</h4>
             </div>
-            <form class="form-horizontal" role="form">
+
+            <div class="form-horizontal">
             <div class="form-group">
-                <label for="openDeadlineInput" class="col-sm-4 control-label">opened applications:</label>
-                <div class="input-group col-sm-2">
-                    <input id="openDeadlineInput" type="text" class="form-control" value="7"/>
+                 <label class="col-sm-3 control-label">View </label>
+                <span id="majors"></span>
+            </div>
+            <div class="form-group">
+                <label for="openDeadlineInput" class="col-sm-3 control-label">reject open applications after </label>
+                <div class="input-group col-sm-3">
+                    <input onchange="updateAutoClose('openDeadlineInput', true)" id="openDeadlineInput" type="number" min="0" step="1" pattern="\d+" class="form-control" value="7"/>
                     <span class="input-group-addon"> days</span>
                 </div>
+
             </div>
             <div class="form-group">
-                <label for="pendingDeadlineInput" class="col-sm-4 control-label">pending applications</label>
-                <div class="input-group col-sm-2">
-                     <input id="pendingDeadlineInput" type="text" class="form-control" value="7"/>
+                <label for="pendingDeadlineInput" class="col-sm-3 control-label">reject pending applications after</label>
+                <div class="input-group col-sm-3">
+                     <input onchange="updateAutoClose('pendingDeadlineInput', true)" id="pendingDeadlineInput" type="number" min="0" step="1" pattern="\d+" class="form-control" value="7"/>
                      <span class="input-group-addon"> days</span>
                 </div>
             </div>
-            </form>
+            </div>
         </div>
 
     <div class="col-sm-10 col-md-offset-1">
     <div class="page-header">
-        <h4>Overall status of the students</h4>
+        <h4>Status of the <span id="nbStudents">??</span> student(s)</h4>
     </div>
     <div id="student-progress"></div>
 
-
-    <table class="table table-condensed">
+    <button class="btn btn-primary" onclick="mailSelection()">Mail selected students</button>
+    Select students :
+        <a onclick="selectAll()">all</a>,
+        <a onclick="selectNone()">none</a>,
+        <a onclick="invertSelection()">invert</a>
+        &nbsp;
+    <div class="col-sm-12">
+    <table class="table">
         <thead>
             <tr>
+                <th></th>
                 <th>Student</th>
+                <th>Major</th>
+                <th>Statistics</th>
+                <th>Last update</th>
             </tr>
         </thead>
         <tbody id="studentTable">
         </tbody>
     </table>
     </div>
+    </div>
 
 
     </div>
-    <!-- stacked progress bar : nb of student granted, opened, closed
-    denied, open, granted -->
-
-    <!-- student list per status, for-each student: check button for e-mail, reverse selection,
-        granted
-
-        open with pending interviews then nb opened
-        open with no pending interviews then nb opened
-        no open with interviews (then nb opened)
-        no open without interviews (then nb opened)
-
-        each time: x open (y with interviews), x close (y with interviews), x total, last connection
-    raw statistics (nb Open, nb Close, nb Granted, nb Interviews, last connexion) -->
-
 </div>
 </body>
 </html>

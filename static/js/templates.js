@@ -75,7 +75,7 @@ exports["application_line"] = function tmpl_application_line(locals) {
 exports["majors_button"] = function tmpl_majors_button(locals) {
     var buf = [];
     var locals_ = locals || {}, majors = locals_.majors;
-    buf.push('<div class="btn-group"><button id="allMajors" onclick="showAll()" class="btn btn-default btn-sm">all</button><button id="noMajors" onclick="hideAll()" class="btn btn-default btn-sm">none</button></div><div class="btn-group">');
+    buf.push('<div class="btn-group"><button id="allMajors" onclick="showAll()" class="btn btn-default btn-sm">all</button><button id="noMajors" onclick="hideAll()" class="btn btn-default btn-sm">none</button></div>&nbsp;<div class="btn-group">');
     (function () {
         var $$obj = majors;
         if ('number' == typeof $$obj.length) {
@@ -87,8 +87,7 @@ exports["majors_button"] = function tmpl_majors_button(locals) {
                     'class': [
                         'btn',
                         'btn-default',
-                        'btn-sm',
-                        'active'
+                        'btn-sm'
                     ]
                 }, {
                     id: true,
@@ -106,8 +105,7 @@ exports["majors_button"] = function tmpl_majors_button(locals) {
                     'class': [
                         'btn',
                         'btn-default',
-                        'btn-sm',
-                        'active'
+                        'btn-sm'
                     ]
                 }, {
                     id: true,
@@ -123,57 +121,67 @@ exports["majors_button"] = function tmpl_majors_button(locals) {
 // student_line.jade compiled template
 exports["student_line"] = function tmpl_student_line(locals) {
     var buf = [];
-    var locals_ = locals || {}, stats = locals_.stats;
+    var locals_ = locals || {}, id = locals_.id, style = locals_.style, email = locals_.email, username = locals_.username, major = locals_.major, granted = locals_.granted, nbOpenPending = locals_.nbOpenPending, nbInterwiews = locals_.nbInterwiews, nbOpen = locals_.nbOpen, nbApplications = locals_.nbApplications, strLastUpdate = locals_.strLastUpdate;
     buf.push('<tr' + jade.attrs({
-        id: 'student-' + stats.id,
-        'class': ['status-' + stats.style]
+        id: 'student-' + id,
+        'class': [style]
     }, {
         id: true,
         'class': true
-    }) + '><td><span class="checkbox"><input type="checkbox"/><label><a' + jade.attrs({ href: 'mailto:' + stats.email + '' }, { href: true }) + '>' + jade.escape((jade.interp = stats.username) == null ? '' : jade.interp) + '</a></label></span></td></tr>');
+    }) + '><td><input' + jade.attrs({
+        type: 'checkbox',
+        value: email
+    }, {
+        type: true,
+        value: true
+    }) + '/></td><td><a' + jade.attrs({ href: 'mailto:' + email + '' }, { href: true }) + '>' + jade.escape((jade.interp = username) == null ? '' : jade.interp) + '</a></td><td>' + jade.escape((jade.interp = major) == null ? '' : jade.interp) + '</td><td>');
+    if (granted) {
+        buf.push('<i class="glyphicon glyphicon-flag stat-type"></i>');
+    }
+    buf.push('' + jade.escape((jade.interp = nbOpenPending) == null ? '' : jade.interp) + '/' + jade.escape((jade.interp = nbInterwiews) == null ? '' : jade.interp) + '<i title="pending interviews" class="glyphicon glyphicon-briefcase stat-type"></i>' + jade.escape((jade.interp = nbOpen) == null ? '' : jade.interp) + '/' + jade.escape((jade.interp = nbApplications) == null ? '' : jade.interp) + '<i title="open applications" class="glyphicon glyphicon-envelope stat-type"></i></td><td>' + jade.escape((jade.interp = strLastUpdate) == null ? '' : jade.interp) + '</td></tr>');
     return buf.join('');
 };
 
 // student_progress_bar.jade compiled template
 exports["student_progress_bar"] = function tmpl_student_progress_bar(locals) {
     var buf = [];
-    var locals_ = locals || {}, rejected = locals_.rejected, waiting = locals_.waiting, pending = locals_.pending, granted = locals_.granted;
+    var locals_ = locals || {}, rejected = locals_.rejected, rejected_pct = locals_.rejected_pct, waiting = locals_.waiting, waiting_pct = locals_.waiting_pct, pending = locals_.pending, pending_pct = locals_.pending_pct, granted = locals_.granted, granted_pct = locals_.granted_pct;
     buf.push('<div class="progress">');
     if (rejected > 0) {
         buf.push('<div' + jade.attrs({
-            style: 'width: ' + rejected + '%',
+            style: 'width: ' + rejected_pct + '%',
             'class': [
                 'progress-bar',
                 'progress-bar-danger'
             ]
-        }, { style: true }) + '>' + jade.escape((jade.interp = rejected) == null ? '' : jade.interp) + '%</div>');
+        }, { style: true }) + '>' + jade.escape((jade.interp = rejected) == null ? '' : jade.interp) + '</div>');
     }
     if (waiting > 0) {
         buf.push('<div' + jade.attrs({
-            style: 'width: ' + waiting + '%',
+            style: 'width: ' + waiting_pct + '%',
             'class': [
                 'progress-bar',
                 'progress-bar-warning'
             ]
-        }, { style: true }) + '>' + jade.escape((jade.interp = waiting) == null ? '' : jade.interp) + '%</div>');
+        }, { style: true }) + '>' + jade.escape((jade.interp = waiting) == null ? '' : jade.interp) + '</div>');
     }
     if (pending > 0) {
         buf.push('<div' + jade.attrs({
-            style: 'width: ' + pending + '%',
+            style: 'width: ' + pending_pct + '%',
             'class': [
                 'progress-bar',
                 'progress-bar-info'
             ]
-        }, { style: true }) + '>' + jade.escape((jade.interp = pending) == null ? '' : jade.interp) + '%</div>');
+        }, { style: true }) + '>' + jade.escape((jade.interp = pending) == null ? '' : jade.interp) + '</div>');
     }
     if (granted > 0) {
         buf.push('<div' + jade.attrs({
-            style: 'width: ' + granted + '%',
+            style: 'width: ' + granted_pct + '%',
             'class': [
                 'progress-bar',
                 'progress-bar-success'
             ]
-        }, { style: true }) + '>' + jade.escape((jade.interp = granted) == null ? '' : jade.interp) + '%</div>');
+        }, { style: true }) + '>' + jade.escape((jade.interp = granted) == null ? '' : jade.interp) + '</div>');
     }
     buf.push('</div>');
     return buf.join('');

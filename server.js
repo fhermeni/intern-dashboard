@@ -187,7 +187,7 @@ function NotFound(msg){
 }
 
 //Sample workload
-for (var i = 0; i < 100; i++) {
+for (var i = 1; i < 100; i++) {
     m = "CSSR"
     if (i%5 == 0) {
         m = "IHM"
@@ -198,7 +198,7 @@ for (var i = 0; i < 100; i++) {
     }
     var u = backend.newUser("User " + i, "u-" + i + "@unice.fr", "p" + i, m)
     for (var j = 0; j < 20; j++) {
-        backend.newApplication(u.id, j + "/01/2014", "company-" + j, "sample note for " + j, function(err, app){
+        backend.newApplication(u.id, (j + 1) + "/02/2014", "company-" + j, "sample note from user u-" + u.id + " about application " + j, function(err, app){
             if (i % 7 == 0 && j == 17) { //Some granted
                 backend.setStatus(u.id, app.id, "granted", function(err) {if (err) {console.log(err.message)}})
             } else if (i % 5 == 0 && j % 3 == 0) {

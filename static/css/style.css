@@ -23,7 +23,7 @@
     background-color: #f0ad4e;
 }
 
-.app-denied, {
+.app-denied {
       background-color: #f2dede;
 }
 
@@ -33,4 +33,9 @@
 
 .login {
     margin-top: 100px;
+}
+
+.stat-type {
+    padding-right: 20px;
+    padding-left: 3px;
 }
